@@ -88,7 +88,7 @@ Contact us via email or social media
 
 We're here to help, so don't hesitate to reach out if you need assistance.
 
-<h3>Frequently asked questions</h3> 
+<h2>Frequently asked questions</h2> 
 
 Q: How does LoopPress verify NFT ownership? 
 
@@ -103,6 +103,6 @@ Q: How can I give away NFTs?
 A: Loopring has a NFT red packet system. you can put the red packet behind a token gate (or not!)
 
 
-Summary 
+<h2>Summary<h2> 
 
 LoopPress is the ultimate WordPress plugin for gating content based on NFT ownership. With its powerful features and easy-to-use interface, you can protect your content and offer exclusive access to your audience. Download LoopPress today from the WordPress Plugin Repository and start gating your content based on NFT ownership.
