@@ -21,6 +21,7 @@ LoopPress is a powerful and easy-to-use WordPress plugin that enables users to g
 you can also read this information, with pictures, here https://swantech.us/looppress/
 
 <h2>Features</h2>
+![image](https://user-images.githubusercontent.com/7231316/235256334-7758a036-16b1-4199-94b6-8ab945335a51.png)
 
 Protect content with NFT ownership verification based on token or minter address
 
@@ -59,7 +60,7 @@ If you need any help with configuration, don't hesitate to contact us for suppor
 
 
 <h2>Usage</h2> 
-
+![image](https://user-images.githubusercontent.com/7231316/235256376-74517595-6721-4087-919b-c793e913d625.png)
 eg Shortcode placement in the Wordpress Page Editor
 
 Using LoopPress is easy. Here are the basic steps to get started:
