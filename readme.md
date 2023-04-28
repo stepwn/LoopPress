@@ -103,6 +103,6 @@ Q: How can I give away NFTs?
 A: Loopring has a NFT red packet system. you can put the red packet behind a token gate (or not!)
 
 
-<h2>Summary<h2> 
+<h2>Summary</h2> 
 
 LoopPress is the ultimate WordPress plugin for gating content based on NFT ownership. With its powerful features and easy-to-use interface, you can protect your content and offer exclusive access to your audience. Download LoopPress today from the WordPress Plugin Repository and start gating your content based on NFT ownership.
