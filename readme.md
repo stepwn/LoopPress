@@ -1,18 +1,25 @@
 Contributors: Stephen@swantech.us
+
 Tags: nft, authentication, content protection
+
 Requires at least: 5.0
-Tested up to: 5.8
+
+Tested up to: 6.2
+
 Stable tag: 1.0.0
+
 License: GPL-3.0
+
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-LoopPress
+
+<h1>LoopPress</h1>
 
 LoopPress is a powerful and easy-to-use WordPress plugin that enables users to gate content based on NFT ownership. With LoopPress, you can easily protect your content and offer exclusive access to users who own a specific NFT. LoopPress uses PHP and JS to run directly on your WordPress site's server.
 
 you can also read this information, with pictures, here https://swantech.us/looppress/
 
-Features
+<h2>Features</h2>
 
 Protect content with NFT ownership verification
 
@@ -24,11 +31,11 @@ Safety First!
 
 
 
-Installation
+<h2>Installation</h2>
 
  To install LoopPress, simply follow these steps:
 
-Download the plugin from the WordPress Plugin Repository
+Download the plugin from the WordPress Plugin Repository or download LoopPress.zip 
 
 Upload the plugin to your WordPress site
 
@@ -37,7 +44,7 @@ Activate the plugin in your WordPress dashboard
 Configure the plugin settings according to your requirements
 
 
-Configuration 
+<h2>Configuration</h2> 
 
 After installing LoopPress, you'll need to configure the plugin according to your requirements or options. To configure LoopPress, follow these steps:
 
@@ -50,7 +57,7 @@ Add your API key to the "LoopPress Settings" on the main sidebar of the WordPres
 If you need any help with configuration, don't hesitate to contact us for support.
 
 
-Usage 
+<h2>Usage</h2> 
 
 eg Shortcode placement in the Wordpress Page Editor
 
@@ -71,7 +78,7 @@ Save and publish!
 For more detailed instructions and examples, check out our documentation.
 
 
-Support 
+<h2>Support</h2> 
 
 If you encounter any issues with LoopPress, please don't hesitate to reach out for support. You can find help in the following ways:
 
@@ -81,7 +88,7 @@ Contact us via email or social media
 
 We're here to help, so don't hesitate to reach out if you need assistance.
 
-Frequently asked questions 
+<h3>Frequently asked questions</h3> 
 
 Q: How does LoopPress verify NFT ownership? 
 
