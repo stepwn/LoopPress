@@ -21,7 +21,7 @@ you can also read this information, with pictures, here https://swantech.us/loop
 
 <h2>Features</h2>
 
-Protect content with NFT ownership verification
+Protect content with NFT ownership verification based on token or minter address
 
 Supports WalletConnect for secure authentication
 
