@@ -278,7 +278,7 @@ async function getLoopringNFTs(account){
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return response;
   })
   .catch(error => {
     // API request failed, display an error message

@@ -134,15 +134,6 @@ if(!isset($_SESSION['selectedAccount'])&&!isset($_SESSION['selectedAccountId']))
 	<img src="' . plugin_dir_url( __FILE__ ) . 'wp.ico" alt="WordPress logo" style="width:24px">
 	</div>
 	<div id="prepare"><button id="btn-connect" redirect="'.$redir.'" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" >Log in Web3</button><p>Click the button above to connect to your wallet.</p></div><div id="connected" style="display:none;overflow-wrap:normal;"><button style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" id="btn-disconnect">Disconnect</button><p>Connected to <span id="network-name"></span> network with account:</p><p id="selected-account"></p><p id="account-balance"></p>Loopring ID: <p id="loopring-account-ID"></p></div>';
-  
-    // Display login prompt if user is not logged in
-    //return '<p>Please log in to use the walletconnect feature.</p>';
-	return '<div style="text-align:center;">
-	<img src="' . plugin_dir_url( __FILE__ ) . 'eth.png" alt="ETH logo" style="width:24px">
-	<img src="' . plugin_dir_url( __FILE__ ) . 'lrc.png" alt="LRC logo" style="width:24px">
-	<img src="' . plugin_dir_url( __FILE__ ) . 'wp.ico" alt="WordPress logo" style="width:24px">
-	</div>
-		<div id="prepare"><button id="btn-connect" redirect="'.$redir.'" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" >Log in Web3</button><p>Click the button above to connect to your wallet.</p></div><div id="connected" style="display:none;overflow-wrap:normal;"><button style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" id="btn-disconnect">Disconnect</button><p>Connected to <span id="network-name"></span> network with account:</p><p id="selected-account"></p><p id="account-balance"></p>Loopring ID: <p id="loopring-account-ID"></p></div>';
   }
 else{
 	$html = '<p>You do not own the required NFT to view this content. If you recently acquired the NFT, it may take up to 30 minutes for the transaction to post and be available.</p>';
@@ -167,16 +158,16 @@ add_action('init', 'looppress_register_shortcode');
 
 function looppress_membership_shortcode( $atts, $content = null ) {
 	// Get the token address or minter address from the shortcode attributes
-	$token_address = isset( $atts['token'] ) ? $atts['token'] : '';
-	$minter_address = isset( $atts['minter'] ) ? $atts['minter'] : '';
-
+	$token_addresses = isset( $atts['token'] ) ? explode( ',', $atts['token'] ) : array();
+	$minter_addresses = isset( $atts['minter'] ) ? explode( ',', $atts['minter'] ) : array();
+	$NFT_IDs = isset( $atts['nft_id'] ) ? explode( ',', $atts['nft_id'] ) : array();
 	// Get the selected account from the Web3Modal provider
 	$selected_account = '';
 	if ( isset( $_SESSION['selectedAccount'] ) ) {
 		$selected_account = $_SESSION['selectedAccount'];
 	}
 	// Check if the user has the required NFT ownership
-	if ( has_membership( $selected_account, $token_address, $minter_address ) ) {
+	if ( has_membership( $selected_account, $token_addresses, $minter_addresses,$NFT_IDs ) ) {
 		// Return the contents of the shortcode if the user has the required NFT ownership
 		return do_shortcode( $content );
 	} else {
@@ -185,15 +176,15 @@ function looppress_membership_shortcode( $atts, $content = null ) {
 	}
 }
 
-function has_membership( $selected_account, $token_address, $minter_address ) {
+function has_membership( $selected_account, $token_addresses, $minter_addresses,$NFT_IDs ) {
 	// Check if the selected account has the required NFT ownership
 	if ( empty( $selected_account ) ) {
 		return false;
 	}
 	$loopringApiKey = get_option('loopring_api_key');
 	$loopring_account_id = $_SESSION['selectedAccountId'];
-	if( ! empty($token_address) ){
-		$url = "https://api3.loopring.io/api/v3/user/nft/balances?accountId=$loopring_account_id&tokenAddrs=$token_address";	
+	if( ! empty($token_addresses) && count($token_addresses) == 1){
+		$url = "https://api3.loopring.io/api/v3/user/nft/balances?accountId=$loopring_account_id&tokenAddrs=$token_addresses[0]";	
 	}
 	else{
 		$url = "https://api3.loopring.io/api/v3/user/nft/balances?accountId=$loopring_account_id";
@@ -213,38 +204,58 @@ function has_membership( $selected_account, $token_address, $minter_address ) {
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
         if ($httpCode != 200) {
             die('Error retrieving NFTs from Loopring API');
         }
-
         $json = json_decode($response, true);
         $nfts = array_merge($nfts, $json['data']);
 		foreach ( $nfts as $nft ) {
-			if ( ! empty( $token_address ) && strtolower( trim( $nft['tokenAddress'] ) ) === strtolower( trim( $token_address ) ) ) {
-				return true;
+			if ( ! empty( $token_addresses ) ) {
+				foreach($token_addresses as $token_address){
+					if(strtolower( trim( $nft['tokenAddress'] ) ) === strtolower( trim( $token_address ) )){
+						return true;
+					}
+				}
 			}
-			if ( ! empty( $minter_address ) && strtolower( trim( $nft['minter'] ) ) === strtolower( trim( $minter_address ) ) ) {
-				return true;
+			if ( ! empty( $minter_addresses ) ) {
+				foreach($minter_addresses as $minter_address){
+					if(strtolower( trim( $nft['minter'] ) ) === strtolower( trim( $minter_address ) )){
+						return true;
+					}
+				}
 			}
-		}
-		foreach ( $nfts as $nft ) {
-			if ( ! empty( $token_address ) && strtolower( trim( $nft['tokenAddress'] ) ) === strtolower( trim( $token_address ) ) ) {
-				return true;
-			}
-			if ( ! empty( $minter_address ) && strtolower( trim( $nft['minter'] ) ) === strtolower( trim( $minter_address ) ) ) {
-				return true;
+			if ( ! empty( $NFT_IDs ) ) {
+				foreach($NFT_IDs as $NFT_ID){
+					if(strtolower( trim( $nft['nftId'] ) ) === strtolower( trim( $NFT_ID ) )){
+						return true;
+					}
+				}
 			}
 		}
         $offset += count($json['data']);
     } while ($offset < $json['totalNum']);
 	// Double Check if the user has the required NFT ownership
 	foreach ( $nfts as $nft ) {
-		if ( ! empty( $token_address ) && strtolower( trim( $nft['tokenAddress'] ) ) === strtolower( trim( $token_address ) ) ) {
-			return true;
+		if ( ! empty( $token_addresses ) ) {
+			foreach($token_addresses as $token_address){
+				if(strtolower( trim( $nft['tokenAddress'] ) ) === strtolower( trim( $token_address ) )){
+					return true;
+				}
+			}
 		}
-		if ( ! empty( $minter_address ) && strtolower( trim( $nft['minter'] ) ) === strtolower( trim( $minter_address ) ) ) {
-			return true;
+		else if ( ! empty( $minter_addresses ) ) {
+			foreach($minter_addresses as $minter_address){
+				if(strtolower( trim( $nft['minter'] ) ) === strtolower( trim( $minter_address ) )){
+					return true;
+				}
+			}
+		}
+		if ( ! empty( $NFT_IDs ) ) {
+			foreach($NFT_IDs as $NFT_ID){
+				if(strtolower( trim( $nft['nftId'] ) ) === strtolower( trim( $NFT_ID ) )){
+					return true;
+				}
+			}
 		}
 	}
 	return false;
