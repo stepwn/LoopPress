@@ -68,9 +68,10 @@ Using LoopPress is easy. Here are the basic steps to get started:
 
 Create a new post or page in WordPress
 
-Use the [looppress_required token="tokenid1234" minter="minterethaddress"] shortcode to protect content based on NFT ownership
+Use the [looppress_required token="tokencollectioncontract" minter="minterethaddress" nft_id="individualNFTID"] shortcode to protect content based on NFT ownership
 
-Customize the shortcode attributes to fit your requirements (token or minter is required)
+Customize the shortcode attributes to fit your requirements (token or minter or nft_id is required)
+Multiples are allowed per shortcode separated by commas with <b>no spaces</b> [looppress_required nft_id="nftid1,nftid2,nftid3"]
 
 Put your token gated content on the page using the WordPress content editor
 
