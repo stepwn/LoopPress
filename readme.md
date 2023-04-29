@@ -37,8 +37,8 @@ Safety First!
 
  To install LoopPress, simply follow these steps:
 
-Download the plugin from the WordPress Plugin Repository or download LoopPress.zip 
-<b>If you download from github, rename the folder from "LoopPress-main.zip" to "LoopPress.zip"</b>
+Download the plugin from the WordPress Plugin Repository or download LoopPress.zip
+<b>* <br>If you download from github, rename the folder from "LoopPress-main.zip" to "LoopPress.zip"</b>
 
 Upload the plugin to your WordPress site
 
