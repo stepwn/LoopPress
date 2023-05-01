@@ -3,7 +3,7 @@
 Plugin Name: LoopPress
 Plugin URI: https://swantech.us/looppress
 Description: Token gate content with Loopring NFTs
-Version: 1.0.1
+Version: 1.0.2
 Author: Stephen Swanson
 Author URI: https://swantech.us
 License: GPL2
