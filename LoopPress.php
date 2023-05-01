@@ -54,7 +54,7 @@ function walletconnect_enqueue_scripts() {
   wp_enqueue_script('walletconnect', 'https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js', array(), null, true);
 
   // Enqueue your plugin script that contains the code to initiate WalletConnect
-  wp_enqueue_script('walletconnect-wordpress', plugin_dir_url(__FILE__) . 'walletconnect.js', array('jquery'), null, true,'defer');
+  wp_enqueue_script('walletconnect-wordpress', plugin_dir_url(__FILE__) . 'walletconnect.js?v=' . time(), array('jquery'), null, true,'defer');
   // Add the key to the inline JS code
   $key = uniqid(); // Generate a unique key
 	$_SESSION['proxy_key'] = $key; // Save the key to session storage
@@ -105,7 +105,7 @@ function looppress_settings_page() {
 }
 function looppress_dashboard_shortcode() {
 if(!isset($_SESSION['selectedAccount'])&&!isset($_SESSION['selectedAccountId'])){
-    return '<div style="text-align:center;">
+    return '<div style="text-align:center;display:none;" id="connect-wallet-section">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'eth.png" alt="ETH logo" style="width:24px">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'lrc.png" alt="LRC logo" style="width:24px">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'wp.ico" alt="WordPress logo" style="width:24px">
@@ -113,7 +113,7 @@ if(!isset($_SESSION['selectedAccount'])&&!isset($_SESSION['selectedAccountId']))
 <div id="prepare"><button id="btn-connect" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" >Log in Web3</button><p>Click the button above to connect to your wallet.</p></div><div id="connected" style="display:none;overflow-wrap:normal;"><button style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" id="btn-disconnect">Disconnect</button><p>Connected to <span id="network-name"></span> network with account:</p><p id="selected-account"></p><p id="account-balance"></p>Loopring ID: <p id="loopring-account-ID"></p></div>';
   }
 else{
-	return '<div style="text-align:center;">
+	return '<div style="text-align:center;display:none;" id="connect-wallet-section">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'eth.png" alt="ETH logo" style="width:24px">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'lrc.png" alt="LRC logo" style="width:24px">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'wp.ico" alt="WordPress logo" style="width:24px">
@@ -128,12 +128,15 @@ function looppress_shortcode($content = "") {
 	}
 if(!isset($_SESSION['selectedAccount'])&&!isset($_SESSION['selectedAccountId'])){
   // Only display contents if user is logged in
-    return '<div style="text-align:center;">
+    return '
+	<div style="text-align:center;display:none;" id="connect-wallet-section">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'eth.png" alt="ETH logo" style="width:24px">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'lrc.png" alt="LRC logo" style="width:24px">
 	<img src="' . plugin_dir_url( __FILE__ ) . 'wp.ico" alt="WordPress logo" style="width:24px">
+	<br>
+	<div id="prepare"><button id="btn-connect" redirect="'.$redir.'" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" >Log in Web3</button><p>Click the button above to connect to your wallet.</p></div><div id="connected" style="display:none;overflow-wrap:normal;"><button style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" id="btn-disconnect">Disconnect</button><p>Connected to <span id="network-name"></span> network with account:</p><p id="selected-account"></p><p id="account-balance"></p>Loopring ID: <p id="loopring-account-ID"></p></div>
 	</div>
-	<div id="prepare"><button id="btn-connect" redirect="'.$redir.'" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" >Log in Web3</button><p>Click the button above to connect to your wallet.</p></div><div id="connected" style="display:none;overflow-wrap:normal;"><button style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" id="btn-disconnect">Disconnect</button><p>Connected to <span id="network-name"></span> network with account:</p><p id="selected-account"></p><p id="account-balance"></p>Loopring ID: <p id="loopring-account-ID"></p></div>';
+	';
   }
 else{
 	$html = '<p>You do not own the required NFT to view this content. If you recently acquired the NFT, it may take up to 30 minutes for the transaction to post and be available.</p>';

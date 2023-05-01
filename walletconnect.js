@@ -319,7 +319,7 @@ async function onConnect() {
   console.log("Opening a dialog", web3Modal);
   try {
     provider = await web3Modal.connect();
-    fetchAccountData();
+    //fetchAccountData();
   } catch(e) {
     console.log("Could not get a wallet connection", e);
     return;
@@ -383,26 +383,31 @@ localStorage.clear();
  * Main entry point.
  */
 window.addEventListener('load', async () => {
-  document.querySelector("#btn-connect").addEventListener("click", ()=>{init();onConnect()});
-  if(document.querySelector("#btn-connect").getAttribute("isLoggedIn") === "True"){
-    init();
-    onConnect();
-  }
-  // Check if user is on mobile device
-if (/Mobi/.test(navigator.userAgent)) {
-  // Add a button specifically for WalletConnect
-  const wcButton = document.createElement('button');
-  wcButton.innerHTML = 'Connect with WalletConnect';
-  wcButton.classList = 'wp-block-button__link wp-element-button';
-  wcButton.style ='display:block;margin:auto;width:fit-content;margin-top:8px;';
-  wcButton.onclick = function() {
-    // Call the connect function for WalletConnect
-    connectWalletConnect();
-    onConnect();
-  }
-  document.querySelector("#btn-connect").parentNode.insertBefore(wcButton, document.querySelector("#btn-connect").nextSibling);
-}
-
-
-  document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+  const connectSection = document.querySelector("#connect-wallet-section");
+    if (connectSection) {
+        connectSection.style.display = "block";
+        document.querySelector("#btn-connect").addEventListener("click", ()=>{init();onConnect()});
+        if(document.querySelector("#btn-connect").getAttribute("isLoggedIn") === "True"){
+          init();
+          onConnect();
+        }
+        // Check if user is on mobile device
+      if (/Mobi/.test(navigator.userAgent)) {
+        // Add a button specifically for WalletConnect
+        const wcButton = document.createElement('button');
+        wcButton.innerHTML = 'Connect with WalletConnect';
+        wcButton.classList = 'wp-block-button__link wp-element-button';
+        wcButton.style ='display:block;margin:auto;width:fit-content;margin-top:8px;';
+        wcButton.onclick = function() {
+          // Call the connect function for WalletConnect
+          connectWalletConnect();
+          onConnect();
+        }
+        document.querySelector("#btn-connect").parentNode.insertBefore(wcButton, document.querySelector("#btn-connect").nextSibling);
+      }
+    }
+    const dcButton = document.querySelector("#btn-disconnect");
+    if(dcButton){
+      dcButton.addEventListener("click", onDisconnect);
+    }
 });
