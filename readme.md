@@ -6,7 +6,7 @@ Requires at least: 5.0
 
 Tested up to: 6.2
 
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 
 License: GPL-3.0
 
@@ -36,26 +36,26 @@ Safety First!
 <h2>Installation</h2>
 
  To install LoopPress, simply follow these steps:
-
-Download the plugin from the WordPress Plugin Repository or download LoopPress.zip
+<ul>
+<li>Download the plugin from the WordPress Plugin Repository or download LoopPress.zip
 <br><b>*If you download from github, rename the folder from "LoopPress-main.zip" to "LoopPress.zip"</b>
 
-Upload the plugin to your WordPress site
+<li>Upload the plugin to your WordPress site
 
-Activate the plugin in your WordPress dashboard
+<li>Activate the plugin in your WordPress dashboard
 
-Configure the plugin settings according to your requirements
-
+<li>Configure the plugin settings according to your requirements
+</ul>
 
 <h2>Configuration</h2> 
 
 After installing LoopPress, you'll need to configure the plugin according to your requirements or options. To configure LoopPress, follow these steps:
+<ul>
+<li>Export your Loopring API key -> Loopring Docs
 
-Export your Loopring API key -> Loopring Docs
+<li>Add your API key to the "LoopPress Settings" on the main sidebar of the WordPress admin dashboard
 
-Add your API key to the "LoopPress Settings" on the main sidebar of the WordPress admin dashboard
-
-(optional) Edit the new "LoopPress" Web3 dashboard page to your liking. *leave the [looppress] shortcode in the page editor!
+<li>(optional) Edit the new "LoopPress" Web3 dashboard page to your liking. *leave the [looppress] shortcode in the page editor!
 
 If you need any help with configuration, don't hesitate to contact us for support.
 
@@ -65,21 +65,21 @@ If you need any help with configuration, don't hesitate to contact us for suppor
 eg Shortcode placement in the Wordpress Page Editor
 
 Using LoopPress is easy. Here are the basic steps to get started:
+<ol>
+<li>Create a new post or page in WordPress
 
-Create a new post or page in WordPress
+<li>Use the [looppress_required token="tokencollectioncontract" minter="minterethaddress" nft_id="individualNFTID"] shortcode to protect content based on NFT ownership
 
-Use the [looppress_required token="tokencollectioncontract" minter="minterethaddress" nft_id="individualNFTID"] shortcode to protect content based on NFT ownership
-
-Customize the shortcode attributes to fit your requirements (token or minter or nft_id is required)
+<li>Customize the shortcode attributes to fit your requirements (token or minter or nft_id is required)
 Multiples are allowed per shortcode separated by commas with <b>no spaces</b> 
 
 [looppress_required nft_id="nftid1,nftid2,nftid3"]
 
-Put your token gated content on the page using the WordPress content editor
+<li>Put your token gated content on the page using the WordPress content editor
 
-at the end of your gated content put the [/looppress_required] shortcode tag.
+<li>At the end of your gated content put the [/looppress_required] shortcode tag.
 
-Save and publish!
+<li>Save and publish!
 
 For more detailed instructions and examples, check out our documentation.
 
