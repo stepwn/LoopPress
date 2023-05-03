@@ -55,6 +55,10 @@ function walletconnect_enqueue_scripts() {
 
   // Enqueue your plugin script that contains the code to initiate WalletConnect
   wp_enqueue_script('walletconnect-wordpress', plugin_dir_url(__FILE__) . 'walletconnect.js?v=' . time(), array('jquery'), null, true,'defer');
+
+  // Enqueue your style
+  wp_enqueue_style('looppress-style', plugin_dir_url(__FILE__) . 'style.css', array(), filemtime(plugin_dir_path(__FILE__) . 'style.css'), 'all');
+
   // Add the key to the inline JS code
   $key = uniqid(); // Generate a unique key
 	$_SESSION['proxy_key'] = $key; // Save the key to session storage
@@ -121,7 +125,7 @@ else{
 	<div id="prepare"><button id="btn-connect" isLoggedIn="True" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" >Log in Web3</button><p>Click the button above to connect to your wallet.</p></div><div id="connected" style="display:none;overflow-wrap:normal;"><button style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button" id="btn-disconnect">Disconnect</button><p>Connected to <span id="network-name"></span> network with account:</p><p id="selected-account"></p><p id="account-balance"></p>Loopring ID: <p id="loopring-account-ID"></p></div>';
 }
 }
-function looppress_shortcode($content = "") {
+function looppress_shortcode($content = "",$fail_message = "") {
 	$redir = false;
 	if($content != ""){
 		$redir = true;
@@ -139,17 +143,16 @@ if(!isset($_SESSION['selectedAccount'])&&!isset($_SESSION['selectedAccountId']))
 	';
   }
 else{
-	$html = '<p>You do not own the required NFT to view this content. If you recently acquired the NFT, it may take up to 30 minutes for the transaction to post and be available.</p>';
+	$html = '<p class="looppress_fail_message">'.$fail_message;
 	$page_title = 'LoopPress'; // Replace with your page title
 	$page_query = new WP_Query( array( 'pagename' => $page_title ) );
-
-if ( $page_query->have_posts() ) {
-    $page_query->the_post();
-    $page_link = get_permalink();
-    $html .='<a href="' . $page_link . '" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button">Web3 Dashboard</a>';
-	wp_reset_postdata();
-}
-return $html;
+	if ( $page_query->have_posts() ) {
+		$page_query->the_post();
+		$page_link = get_permalink();
+		$html .='<a href="' . $page_link . '" style="display:block;margin:auto;width:fit-content;"class="wp-block-button__link wp-element-button">Web3 Dashboard</a>';
+		wp_reset_postdata();
+	}
+	return $html.'</p>';
 }
 }
 
@@ -164,6 +167,9 @@ function looppress_membership_shortcode( $atts, $content = null ) {
 	$token_addresses = isset( $atts['token'] ) ? explode( ',', $atts['token'] ) : array();
 	$minter_addresses = isset( $atts['minter'] ) ? explode( ',', $atts['minter'] ) : array();
 	$NFT_IDs = isset( $atts['nft_id'] ) ? explode( ',', $atts['nft_id'] ) : array();
+	
+	// Get other attributes
+	$fail_message = isset( $atts['fail_message'] ) ? $atts['fail_message'] : "<b>You do not own the required NFT to view this content.</b><br><small>If you recently acquired the NFT, it may take up to 30 minutes for the transaction to post and be available.</small>";
 	// Get the selected account from the Web3Modal provider
 	$selected_account = '';
 	if ( isset( $_SESSION['selectedAccount'] ) ) {
@@ -175,7 +181,7 @@ function looppress_membership_shortcode( $atts, $content = null ) {
 		return do_shortcode( $content );
 	} else {
 		// Return a message if the user doesn't have the required NFT ownership
-		return looppress_shortcode($content);
+		return looppress_shortcode($content,$fail_message);
 	}
 }
 

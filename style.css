@@ -1,0 +1,21 @@
+.looppress_fail_message {
+    text-align: center;
+    width: fit-content;
+    margin: 1em;
+    border: 2px solid var(--wp-admin-theme-color);
+    border-radius: 5px;
+    padding: 10px;
+    animation: pulse 8.4s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        border-color: var(--wp-admin-theme-color);
+    }
+    50% {
+        border-color: transparent;
+    }
+    100% {
+        border-color: var(--wp-admin-theme-color);
+    }
+}
