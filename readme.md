@@ -51,7 +51,7 @@ Safety First!
 
 After installing LoopPress, you'll need to configure the plugin according to your requirements or options. To configure LoopPress, follow these steps:
 <ul>
-<li>Export your Loopring API key -> Loopring Docs
+<li>Export your Loopring API key -> <a href="https://docs.loopring.io/en/basics/key_mgmt.html">Loopring Docs</a>
 
 <li>Add your API key to the "LoopPress Settings" on the main sidebar of the WordPress admin dashboard
 
