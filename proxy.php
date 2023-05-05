@@ -55,6 +55,7 @@ if (strpos($url, $etherscanUrl) !== false) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $response = curl_exec($ch);
+        echo $response;
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
@@ -66,7 +67,7 @@ if (strpos($url, $etherscanUrl) !== false) {
         $nfts = array_merge($nfts, $json['data']);
         $offset += count($json['data']);
     } while ($offset < $json['totalNum']);
-    return json_encode($nfts);
+    return; //json_encode($nfts);
 } else {
     // Invalid endpoint requested
     http_response_code(404);

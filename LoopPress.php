@@ -213,6 +213,7 @@ function has_membership( $selected_account, $token_addresses, $minter_addresses,
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $response = curl_exec($ch);
+		//echo "<script>console.log('".$response."');</script>";
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if ($httpCode != 200) {
