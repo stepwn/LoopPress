@@ -18,7 +18,6 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 LoopPress is a powerful and easy-to-use WordPress plugin that enables users to gate content based on NFT ownership. With LoopPress, you can easily protect your content and offer exclusive access to users who own a specific NFT. LoopPress uses PHP and JS to run directly on your WordPress site's server.
 
-you can also read this information, with pictures, here https://swantech.us/looppress/
 
 <h2>Features</h2>
 <img src='https://user-images.githubusercontent.com/7231316/235256334-7758a036-16b1-4199-94b6-8ab945335a51.png'>
