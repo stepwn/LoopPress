@@ -40,6 +40,7 @@ Safety First!
 <br>
 Follow the same installation steps, but also obtain a ProjectId from https://cloud.walletconnect.com and save it in the LoopPress settings page.
 <br>
+<hr>
  To install LoopPress, simply follow these steps:
 <ul>
 <li>Download the plugin from the WordPress Plugin Repository or download <a href="https://github.com/stepwn/LoopPress/blob/main/LoopPress.zip">LoopPress.zip</a>
