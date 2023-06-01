@@ -4,13 +4,26 @@
  * Example JavaScript code that interacts with the page and Web3 wallets
  */
 
- // Unpkg imports
-const Web3Modal = window.Web3Modal.default;
-const WalletConnectProvider = window.WalletConnectProvider.default;
+// Create a new <script> element
+var script = document.createElement('script');
+
+// Set the source attribute to the path of the JavaScript file
+script.src = '../wp-content/plugins/LoopPress/assets/bundle.js';
+
+// Append the <script> element to the <head> or <body> of the HTML document
+document.head.appendChild(script); // or document.body.appendChild(script);
+
+script.onload = function () {
+// Code that depends on the dynamically loaded JavaScript file
+const Web3Modal = window.Web3Modal;
+var signClient;
+//const WalletConnectProvider = window.WalletConnectProvider.default;
 const evmChains = window.evmChains;
 
 // Web3modal instance
-let web3Modal
+let web3Modal;
+// Rest of your code...
+
 
 // Chosen wallet provider given by the dialog window
 let provider;
@@ -20,15 +33,36 @@ let provider;
 let selectedAccount;
 
 
+// 1. Define constants
+//const projectId = "6f7194e0ee25e9dd0e4bf771c230a565";
+const projectId = wc_projectId;
+const namespaces = {
+  eip155: {
+    methods: ["eth_sign"],
+    chains: ["eip155:1"],
+    events: ["accountsChanged"],
+  },
+};
+
 /**
  * Setup the orchestra
  */
-function init() {
+async function init() {
 
   console.log("Initializing example");
-  console.log("WalletConnectProvider is", WalletConnectProvider);
+  //console.log("WalletConnectProvider is", WalletConnectProvider);
   console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
-
+		if (window.ethereum) {
+  // Request access to the user's accounts
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  
+  // The accounts array contains the user's Ethereum addresses
+  const address = accounts[0];
+  
+  console.log('Ethereum address:', address);
+  window.walletAddress = address;
+} else {
+  console.log('Ethereum provider not found');
   // Check that the web page is run in a secure context,
   // as otherwise MetaMask won't be available
   if(location.protocol !== 'https:') {
@@ -42,30 +76,20 @@ function init() {
   // Built-in web browser provider (only one can exist as a time)
   // like MetaMask, Brave or Opera is added automatically by Web3modal
   const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        rpc: {
-          1: 'https://api.etherscan.io/'
-        },
-        pollingInterval: 3600000, // 1 hour
-        network: 'mainnet',
-        chainId: 1
-      }
-    }
   };
-  
+  console.log(Web3Modal);
   web3Modal = new Web3Modal({
-    cacheProvider: false, // optional
-    providerOptions, // required
-    disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
+    projectId,
+	standaloneChains: namespaces.eip155.chains,
   });
+  signClient = await SignClient.init({ projectId });
 
   console.log("Web3Modal instance is", web3Modal);
 }
+}
 
-function connectWalletConnect(){
-  console.log("WalletConnectProvider is", WalletConnectProvider);
+async function connectWalletConnect(){
+  //console.log("WalletConnectProvider is", WalletConnectProvider);
   console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
 
   // Check that the web page is run in a secure context,
@@ -81,28 +105,15 @@ function connectWalletConnect(){
   // Tell Web3modal what providers we have available.
   // Built-in web browser provider (only one can exist as a time)
   // like MetaMask, Brave or Opera is added automatically by Web3modal
-  const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        rpc: {
-          1: 'https://api.etherscan.io/'
-        },
-        pollingInterval: 3600000, // 1 hour
-        network: 'mainnet',
-        chainId: 1
-      }
-    }
-  };
   
+	
+	
 
-
-  web3Modal = new Web3Modal({
-    cacheProvider: false, // optional
-    providerOptions, // required
-    disableInjectedProvider: true, // optional. For MetaMask / Brave / Opera.
+   web3Modal = new Web3Modal({
+    projectId,
+	standaloneChains: namespaces.eip155.chains,
   });
-
+	signClient = await SignClient.init({ projectId });
   console.log("Web3Modal instance is", web3Modal);
 }
 function showSpinner(remove=true) {
@@ -167,17 +178,17 @@ function showSpinner(remove=true) {
 async function fetchAccountData() {
   // add a js spinner while this loads
   showSpinner(true);
-  const web3 = new Web3(provider);
+  //const web3 = new Web3(provider);
 
-  console.log("Web3 instance is", web3);
+  //console.log("Web3 instance is", web3);
 
-  const chainId = await web3.eth.getChainId();
-  const networkName = getNetworkName(chainId);
-  document.querySelector("#network-name").textContent = networkName;
+  //const chainId = await web3.eth.getChainId();
+  //const networkName = getNetworkName(chainId);
+  //document.querySelector("#network-name").textContent = networkName;
 
-  const accounts = await web3.eth.getAccounts();
+  const accounts = window.walletAddress;
   console.log("Got accounts", accounts);
-  selectedAccount = accounts[0];
+  selectedAccount = window.walletAddress;
 
   document.querySelector("#selected-account").textContent = selectedAccount;
 
@@ -315,31 +326,38 @@ async function refreshAccountData() {
  * Connect wallet button pressed.
  */
 async function onConnect() {
-
+	if(localStorage.getItem('wc@2:client:0.3//session') != undefined && localStorage.getItem('wc@2:client:0.3//session')!= "[]"){
+		const sessionData = JSON.parse(localStorage.getItem('wc@2:client:0.3//session'));
+        const address = sessionData[0].namespaces.eip155.accounts[0];
+        const addressParts = address.split(':');
+        const walletAddress = addressParts[2];
+		window.walletAddress = walletAddress;
+		console.log('Wallet address:', address);
+	}else{
   console.log("Opening a dialog", web3Modal);
-  try {
-    provider = await web3Modal.connect();
-    //fetchAccountData();
-  } catch(e) {
-    console.log("Could not get a wallet connection", e);
-    return;
-  }
+  console.log("signClient, ", signClient);
+  if (signClient) {
+      const { uri, approval } = await signClient.connect({
+        requiredNamespaces: namespaces,
+      });
+      if (uri) {
+        await web3Modal.openModal({ uri });
+        const accounts = await approval();
+        web3Modal.closeModal();
+        console.log(web3Modal);
+        console.log(signClient);
+        const sessionData = JSON.parse(localStorage.getItem('wc@2:client:0.3//session'));
+        const address = sessionData[0].namespaces.eip155.accounts[0];
+        const addressParts = address.split(':');
+        const walletAddress = addressParts[2];
+		window.walletAddress = walletAddress;
+        //document.getElementById("connect-button").innerText = walletAddress;
+        console.log('Wallet address:', address);
 
-  // Subscribe to accounts change
-  provider.on("accountsChanged", (accounts) => {
-    fetchAccountData();
-  });
-
-  // Subscribe to chainId change
-  provider.on("chainChanged", (chainId) => {
-    fetchAccountData();
-  });
-
-  // Subscribe to networkId change
-  provider.on("networkChanged", (networkId) => {
-    fetchAccountData();
-  });
-
+        //console.log("Approved Ethereum address:", signClient.accounts[0]);
+      }
+    }
+	}
   await refreshAccountData();
   
 }
@@ -356,18 +374,7 @@ localStorage.clear();
   clear_session();
   console.log("Killing the wallet connection", provider);
 
-  // TODO: Which providers have close method?
-  if(provider.close) {
-    await provider.close();
-
-    // If the cached provider is not cleared,
-    // WalletConnect will default to the existing session
-    // and does not allow to re-scan the QR code with a new wallet.
-    // Depending on your use case you may want or want not his behavir.
-    await web3Modal.clearCachedProvider();
-    provider = null;
-  }
-
+  //await signClient.disconnect();
 
 
   selectedAccount = null;
@@ -386,28 +393,29 @@ window.addEventListener('load', async () => {
   const connectSection = document.querySelector("#connect-wallet-section");
     if (connectSection) {
         connectSection.style.display = "block";
-        document.querySelector("#btn-connect").addEventListener("click", ()=>{init();onConnect()});
+        document.querySelector("#btn-connect").addEventListener("click", async ()=>{await init();onConnect()});
         if(document.querySelector("#btn-connect").getAttribute("isLoggedIn") === "True"){
-          init();
+          await init();
           onConnect();
         }
         // Check if user is on mobile device
-      if (/Mobi/.test(navigator.userAgent)) {
+      //if (/Mobi/.test(navigator.userAgent)) {
         // Add a button specifically for WalletConnect
         const wcButton = document.createElement('button');
         wcButton.innerHTML = 'Connect with WalletConnect';
         wcButton.classList = 'wp-block-button__link wp-element-button';
         wcButton.style ='display:block;margin:auto;width:fit-content;margin-top:8px;';
-        wcButton.onclick = function() {
+        wcButton.onclick = async function() {
           // Call the connect function for WalletConnect
-          connectWalletConnect();
+          await connectWalletConnect();
           onConnect();
         }
         document.querySelector("#btn-connect").parentNode.insertBefore(wcButton, document.querySelector("#btn-connect").nextSibling);
-      }
+      //}
     }
     const dcButton = document.querySelector("#btn-disconnect");
     if(dcButton){
       dcButton.addEventListener("click", onDisconnect);
     }
 });
+}

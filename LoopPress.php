@@ -3,7 +3,7 @@
 Plugin Name: LoopPress
 Plugin URI: https://swantech.us/looppress
 Description: Token gate content with Loopring NFTs
-Version: 1.0.4
+Version: 1.1.0
 Author: Stephen Swanson
 Author URI: https://swantech.us
 License: GPL2
@@ -42,21 +42,23 @@ register_deactivation_hook( __FILE__, 'looppress_deactivation' );
 
 function walletconnect_enqueue_scripts() {
   // Enqueue Web3.js library
-  wp_enqueue_script('web3', 'https://unpkg.com/web3@1.2.11/dist/web3.min.js', array(), null, true);
+  //wp_enqueue_script('web3', 'https://unpkg.com/web3@1.2.11/dist/web3.min.js', array(), null, true);
 
   // Enqueue Web3Modal library
-  wp_enqueue_script('web3modal', 'https://unpkg.com/web3modal@1.9.0/dist/index.js', array(), null, true);
-
-  // Enqueue evm-chains library
-  wp_enqueue_script('evm-chains', 'https://unpkg.com/evm-chains@0.2.0/dist/umd/index.min.js', array(), null, true);
-
+  // v1 depreciated wp_enqueue_script('web3modal', 'https://unpkg.com/web3modal@1.9.0/dist/index.js', array(), null, true);
   // Enqueue WalletConnect library
-  wp_enqueue_script('walletconnect', 'https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js', array(), null, true);
+  //wp_enqueue_script('walletconnect', 'https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js', array(), null, true);
+	// including packaged version until official CDN available
+	//wp_enqueue_script('web3modal', plugin_dir_url(__FILE__) . '/assets/index-1da0f365.js', array(), null, true);
+  // Enqueue evm-chains library
+  //wp_enqueue_script('evm-chains', 'https://unpkg.com/evm-chains@0.2.0/dist/umd/index.min.js', array(), null, true);
 
-  // Enqueue your plugin script that contains the code to initiate WalletConnect
+  
+
+  // Enqueue plugin script that contains the code to initiate WalletConnect
   wp_enqueue_script('walletconnect-wordpress', plugin_dir_url(__FILE__) . 'walletconnect.js?v=' . time(), array('jquery'), null, true,'defer');
 
-  // Enqueue your style
+  // Enqueue style
   wp_enqueue_style('looppress-style', plugin_dir_url(__FILE__) . 'style.css', array(), filemtime(plugin_dir_path(__FILE__) . 'style.css'), 'all');
 
   // Dashicons
@@ -66,7 +68,8 @@ function walletconnect_enqueue_scripts() {
 	$_SESSION['proxy_key'] = $key; // Save the key to session storage
 	$eth_address = isset($_SESSION['selectedAccount']) ? $_SESSION['selectedAccount'] : '';
 	$lrc_account = isset($_SESSION['selectedAccountId']) ? $_SESSION['selectedAccountId'] : '';
-	$inline_script = "const looppressKey = '$key';const eth_address = '$eth_address';const lrc_account = '$lrc_account';";
+	$wc_projectId = esc_attr(get_option('wc_projectId'));
+	$inline_script = "const looppressKey = '$key';const eth_address = '$eth_address';const wc_projectId = '$wc_projectId'";
   // Add the inline JS code to the looppress-script file
   wp_add_inline_script('walletconnect-wordpress', $inline_script);
 }
@@ -82,6 +85,7 @@ function looppress_plugin_menu() {
 add_action('admin_init', 'looppress_settings_init');
 function looppress_settings_init() {
     register_setting('looppress_settings', 'loopring_api_key');
+	register_setting('looppress_settings', 'wc_projectId');
 }
 
 function looppress_settings_page() {
@@ -96,19 +100,24 @@ function looppress_settings_page() {
                     <th scope="row"><label for="loopring_api_key">Loopring API Key</label></th>
                     <td><input type="password" id="loopring_api_key" name="loopring_api_key" value="<?php echo esc_attr(get_option('loopring_api_key')); ?>" /></td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="wc_projectId">WalletConnect Project ID</label></th>
+                    <td><input type="text" id="wc_projectId" name="wc_projectId" value="<?php echo esc_attr(get_option('wc_projectId')); ?>" /></td>
+                </tr>
             </table>
             <?php submit_button(); ?>
         </form>
-		<div>
-			<p>Thank you for using LoopPress!</p>
-			<p>Please visit <a href="https://github.com/stepwn/LoopPress">GitHub</a> for more information and updates.</p>
-			<p>If you find LoopPress helpful, please consider donating to support development. NFTs Welcome!</p>
-			<img src="<?php echo plugin_dir_url( __FILE__ ) . 'donate-qr-code.png'; ?>" alt="Donate QR code" />
-			<p>0x8886d71DCd602fF1b3e001aA30e080D24E6407A7</p>
-		</div>
+        <div>
+            <p>Thank you for using LoopPress!</p>
+            <p>Please visit <a href="https://github.com/stepwn/LoopPress">GitHub</a> for more information and updates.</p>
+            <p>If you find LoopPress helpful, please consider donating to support development. NFTs Welcome!</p>
+            <img src="<?php echo plugin_dir_url(__FILE__) . 'donate-qr-code.png'; ?>" alt="Donate QR code" />
+            <p>0x8886d71DCd602fF1b3e001aA30e080D24E6407A7</p>
+        </div>
     </div>
     <?php
 }
+
 function looppress_dashboard_shortcode() {
 if(!isset($_SESSION['selectedAccount'])&&!isset($_SESSION['selectedAccountId'])){
     return '<div style="text-align:center;display:none;" id="connect-wallet-section">
