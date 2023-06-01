@@ -35,6 +35,10 @@ Safety First!
 
 <h2>Installation</h2>
 
+*** WalletConnect v2 Update ***
+![image](https://github.com/stepwn/LoopPress/assets/7231316/a665966e-b62a-4f3d-8b46-158d92541ea7)
+Follow the same installation steps, but also obtain a ProjectId from https://cloud.walletconnect.com and save it in the LoopPress settings page.
+
  To install LoopPress, simply follow these steps:
 <ul>
 <li>Download the plugin from the WordPress Plugin Repository or download <a href="https://github.com/stepwn/LoopPress/blob/main/LoopPress.zip">LoopPress.zip</a>
