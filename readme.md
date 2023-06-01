@@ -12,7 +12,7 @@ License: GPL-3.0
 
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-Github: https://discord.gg/gqwrFkwcGg
+Discord: https://discord.gg/gqwrFkwcGg
 
 
 <h1>LoopPress</h1>
