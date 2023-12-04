@@ -1,3 +1,8 @@
+<b>LoopPress is now Fungate!<br>
+Please visit <a href="https://fungate.io">Fungate.io</a></b>
+
+
+
 Contributors: Stephen@swantech.us
 
 Tags: nft, authentication, content protection
